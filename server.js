@@ -7,6 +7,7 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 
 var port = process.env.PORT || 8080;
+var token = process.env.token || "token";
 app.set('port',port);
 var io = require('socket.io').listen(app.listen(port));
 console.log(`Listening on port ${port}`);
@@ -21,7 +22,7 @@ app.get("/", (req, res) => {
 });
 app.get("/winner", (req, res) => {
     console.log(req.query.token);
-    if(req.query.token === process.env.token){
+    if(req.query.token === token){
         var winner = req.query.winner;
         io.sockets.emit('message', {winner});
         res.sendStatus(200);
