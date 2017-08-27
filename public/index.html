@@ -1,0 +1,107 @@
+<html lang="en">
+    <head>
+        <title>Fastest Finger First</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,900" rel="stylesheet"/>
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+            body{
+                margin: 0;
+                padding: 0;
+                /*background: #3F51B4;*/
+                background: #3f8cff;
+                color:#fff;
+                font-family: 'Roboto', sans-serif;
+                font-weight: 300;
+                min-width: 100vw;
+                min-height: 100vh;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                flex-direction: column;
+                transition: 1s;
+            }
+            @keyframes fadeInUp {
+                0% {
+                    opacity: 0;
+                    transform: translate3d(0,100%,0)
+                }
+
+                to {
+                    opacity: 1;
+                    transform: none
+                }
+            }
+            .animated {
+                animation-duration: 1s;
+                animation-fill-mode: both
+            }
+            .fadeInUp {
+                animation-name: fadeInUp
+            }
+            .heading{
+                font-weight: 300;
+                font-size: 50px;
+            }
+            .winners{
+                display: flex;
+                justify-content: space-between;
+                width: 70%;
+            }
+            .name{
+                font-size: 70px;
+                /*color:#303f9f;*/
+                margin: 0;
+                text-transform: capitalize;
+            }
+            .loader{
+                background-image: url(loader-1.gif);
+                width: 140px;
+                height: 140px;
+                display: block;
+                opacity: 1;
+                background-position: center;
+            }
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <h1 class="heading">Winners Are :</h1>
+        <div class="winners">
+            <div class="winner winner-1">
+                <p class="name animated"></p>
+                <div class="loader"></div>
+            </div>
+            <div class="winner winner-2">
+                <p class="name animated"></p>
+                <div class="loader"></div>
+            </div>
+        </div>
+        <script>
+            window.onload = function () {
+                var socket = io.connect('http://localhost:8080');
+                var winners = document.querySelectorAll(".winners .winner");
+                var index = 0;
+                socket.on('connected', function (data) {
+                    console.log(data.message);
+                });
+                socket.on('message', function (data) {
+                    if(index > 1){
+                        return;
+                    }
+                    if (data.winner) {
+                        console.log(data.winner);
+                        winners[index].querySelector("p").innerHTML = data.winner;
+                        winners[index].querySelector("p").classList.add("fadeInUp");
+                        winners[index].querySelector(".loader").style.display = "none";
+                        index++;
+                    } else {
+                        console.log("There is a problem:", data);
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
