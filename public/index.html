@@ -81,7 +81,7 @@
         </div>
         <script>
             window.onload = function () {
-                var socket = io.connect('http://localhost:8080');
+                var socket = io.connect('https://fffncs.herokuapp.com');
                 var winners = document.querySelectorAll(".winners .winner");
                 var index = 0;
                 socket.on('connected', function (data) {
